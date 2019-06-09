@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXProgressBar?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wan.MainSceneController">
+   <children>
+      <MenuBar>
+        <menus>
+          <Menu mnemonicParsing="false" text="关于">
+            <items>
+              <MenuItem mnemonicParsing="false" text="About" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+      <AnchorPane VBox.vgrow="ALWAYS">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="选择xml文件" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="50.0" />
+            <Text layoutX="10.0" layoutY="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text="选择输出目录" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="100.0" />
+            <TextField fx:id="tfInPath" layoutX="212.0" layoutY="45.0" onDragExited="#getFile" />
+            <TextField fx:id="tfOutPath" layoutX="212.0" layoutY="95.0" onKeyReleased="#pressEnter" />
+            <JFXCheckBox fx:id="checkBoxType" layoutX="212.0" layoutY="164.0" selected="true" text="MD和Html分类" />
+            <JFXCheckBox fx:id="checkBoxLabel" checkedColor="#4363da" layoutX="212.0" layoutY="202.0" text="标签分类" />
+            <JFXButton fx:id="startBtn" buttonType="RAISED" layoutX="239.0" layoutY="265.0" onAction="#btnStart" prefHeight="45.0" prefWidth="104.0" ripplerFill="blueviolet" stylesheets="@scene_main.css" text="开始">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </JFXButton>
+            <ImageView fx:id="inPathImg" fitHeight="30.0" fitWidth="30.0" layoutX="421.0" layoutY="45.0" onMouseClicked="#choseFile" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="outPathImg" fitHeight="30.0" fitWidth="30.0" layoutX="421.0" layoutY="95.0" onMouseClicked="#choseDiretory" pickOnBounds="true" preserveRatio="true" />
+            <JFXProgressBar fx:id="progressbar" layoutX="199.0" layoutY="325.0" visible="false" />
+         </children>
+      </AnchorPane>
+   </children>
+</VBox>
