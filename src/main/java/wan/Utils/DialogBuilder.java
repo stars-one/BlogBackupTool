@@ -5,12 +5,6 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialogLayout;
 import com.sun.istack.internal.Nullable;
 
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
 import javafx.scene.control.Control;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
@@ -159,19 +153,7 @@ public class DialogBuilder {
         hyperlink = new Hyperlink(text);
         hyperlink.setBorder(Border.EMPTY);
         hyperlink.setOnMouseClicked(event -> {
-            if (text.contains("www") || text.contains("com") || text.contains(".")) {
-                try {
-                    Desktop.getDesktop().browse(new URI(text));
-                } catch (IOException | URISyntaxException e) {
-                    e.printStackTrace();
-                }
-            } else if (text.contains(File.separator)) {
-                try {
-                    Desktop.getDesktop().open(new File(text));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
+            MyUtils.setLinkAutoAction(hyperlink);
         });
         return this;
     }

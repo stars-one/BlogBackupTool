@@ -1,4 +1,4 @@
-package wan;
+package wan.controller;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
@@ -35,7 +35,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import wan.Utils.DialogBuilder;
-import wan.Utils.PathUtil;
+import wan.Utils.MyUtils;
 
 public class MainSceneController implements Initializable {
 
@@ -93,7 +93,7 @@ public class MainSceneController implements Initializable {
             NodeList itemLists = document.getElementsByTagName("item");
             startClean(itemLists, () -> {
                 progressbar.setVisible(false);
-                new DialogBuilder(tfOutPath).setTitle("提示").setMessage("已完成，输出目录为" ).setHyperLink(tfOutPath.getText()).setNegativeBtn("确定").create();
+                new DialogBuilder(tfOutPath).setTitle("提示").setMessage("已完成，输出目录为").setHyperLink(tfOutPath.getText()).setNegativeBtn("确定").create();
             });
 
 
@@ -208,9 +208,10 @@ public class MainSceneController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         //设置图片
-        inPathImg.setImage(PathUtil.getImg(this, "file.png"));
-        outPathImg.setImage(PathUtil.getImg(this, "file.png"));
+        inPathImg.setImage(MyUtils.getImg(this, "file.png"));
+        outPathImg.setImage(MyUtils.getImg(this, "file.png"));
 
     }
 
@@ -262,6 +263,16 @@ public class MainSceneController implements Initializable {
         if (keyEvent.getCode() == KeyCode.ENTER) {
             startTask();
         }
+    }
+
+
+    public void openAboutStage(ActionEvent actionEvent) throws IOException {
+        MyUtils.createAndShowStage(this, null, "关于", "scene_about", "icon.png", 600, 600);
+    }
+
+    public void openVersionStage(ActionEvent actionEvent) throws IOException {
+        MyUtils.createAndShowStage(this, null, "版本更新说明", "scene_version", "icon.png", 600, 600);
+
     }
 
     private interface onFinishListener {

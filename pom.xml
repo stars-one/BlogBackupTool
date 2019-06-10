@@ -35,6 +35,7 @@
                     <include>**/fxml/*.fxml</include>
                     <include>**/*.css</include>
                     <include>**/*.png</include>
+                    <include>**/*.jpg</include>
                 </includes>
                 <filtering>false</filtering>
             </resource>
