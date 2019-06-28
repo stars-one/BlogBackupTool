@@ -1,2 +1,0 @@
-Android|开发 Android
-Java|Java开发 Java

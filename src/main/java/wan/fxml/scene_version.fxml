@@ -5,7 +5,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Text layoutX="14.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="v1.0">
@@ -14,5 +13,11 @@
          </font>
       </Text>
       <Label layoutX="33.0" layoutY="45.0" prefHeight="94.0" prefWidth="549.0" text="实现基本的功能，标签分类和生成目录导航的功能暂未实现，敬请期待，喜欢的话不妨打赏一波~您的支持是我的动力！新版本到github获取哦！" wrapText="true" />
+      <Text layoutX="14.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="v2.0">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Text>
+      <Label layoutX="26.0" layoutY="153.0" prefHeight="94.0" prefWidth="549.0" text="实现标签分类和生成目录导航的功能，感谢网友空和一位不知网名的网友的打赏！" wrapText="true" />
    </children>
 </AnchorPane>

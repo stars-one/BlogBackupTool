@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -41,6 +43,7 @@ import wan.Utils.BaseController;
 import wan.Utils.DialogBuilder;
 import wan.Utils.Intent;
 import wan.Utils.MyUtils;
+import wan.bean.Link;
 import wan.bean.TagItemView;
 
 public class MainSceneController extends BaseController {
@@ -65,6 +68,9 @@ public class MainSceneController extends BaseController {
     private JFXButton startBtn;
 
     @FXML
+    private JFXCheckBox outputNavigator;
+
+    @FXML
     private ImageView inPathImg;
 
     @FXML
@@ -72,22 +78,17 @@ public class MainSceneController extends BaseController {
     private File file;//tag.txt，标签的数据
 
 
-
     /**
      * 点击按钮
      *
      * @param event
-     * @throws ParserConfigurationException
-     * @throws IOException
-     * @throws SAXException
      */
     @FXML
-    void btnStart(ActionEvent event) throws ParserConfigurationException, IOException, SAXException {
-
+    void btnStart(ActionEvent event) {
         startTask();
     }
 
-    private void startTask()  {
+    private void startTask() {
         progressbar.setVisible(true);
         Task<Void> myTask = new Task<Void>() {
             @Override
@@ -105,7 +106,7 @@ public class MainSceneController extends BaseController {
                     NodeList itemLists = document.getElementsByTagName("item");
                     startClean(itemLists);
                 }
-               return null;
+                return null;
             }
 
             @Override
@@ -124,6 +125,7 @@ public class MainSceneController extends BaseController {
      * @param itemLists
      */
     private void startClean(NodeList itemLists) {
+        List<Link> links = new ArrayList<>();//连接
         try {
             //获得每一篇博文的单独文件
             for (int i = 0; i < itemLists.getLength(); i++) {
@@ -131,7 +133,7 @@ public class MainSceneController extends BaseController {
                 String title = list.item(0).getTextContent();//第一个结点内容是标题
                 String link = list.item(1).getTextContent();//第二个结点内容是链接
                 String description = list.item(6).getTextContent();
-
+                links.add(new Link(link, title));
                 fileWrite(title, link, description);//抽取内容，写入单独文件
             }
             //标签分类
@@ -139,6 +141,30 @@ public class MainSceneController extends BaseController {
             if (selectedLabel) {
                 fileItemizeForMd(mdPath);//按标签分类（MD文件夹）
                 fileItemizeForMd(htmlPath);//按标签分类(Html文件夹）
+            }
+            //输出目录导航文件
+            if (outputNavigator.isSelected()) {
+                List<String> list = FileUtils.readLines(new File(MyUtils.getCurrentPath(), "tag.txt"), "UTF-8");
+                for (String s : list) {
+                    TagItemView tagItemView = new TagItemView(s);
+                    String tagName = tagItemView.getTagNameText();
+                    List<String> keys = tagItemView.getMapData().get(tagName);
+                    Iterator<Link> iterator = links.iterator();
+                    File outputFile = new File(tfOutPath.getText(), "目录导航.md");
+                    //删除原来的文件
+
+                    FileUtils.writeStringToFile(outputFile, "## " + tagName + "\n", "UTF-8", true);//写入二级标题
+                    while (iterator.hasNext()) {
+                        Link next = iterator.next();
+                        for (String key : keys) {
+                            if (next.getTitle().contains(key)) {
+                                FileUtils.writeStringToFile(outputFile, next.getLink(), "UTF-8", true);
+                                iterator.remove();
+                                break;
+                            }
+                        }
+                    }
+                }
             }
 
         } catch (IOException e) {

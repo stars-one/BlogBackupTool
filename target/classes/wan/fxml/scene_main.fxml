@@ -41,7 +41,7 @@
             <ImageView fx:id="inPathImg" fitHeight="30.0" fitWidth="30.0" layoutX="421.0" layoutY="45.0" onMouseClicked="#choseFile" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="outPathImg" fitHeight="30.0" fitWidth="30.0" layoutX="421.0" layoutY="95.0" onMouseClicked="#choseDiretory" pickOnBounds="true" preserveRatio="true" />
             <JFXProgressBar fx:id="progressbar" layoutX="182.0" layoutY="148.0" prefHeight="32.0" prefWidth="234.0" visible="false" />
-            <JFXCheckBox layoutX="212.0" layoutY="241.0" text="输出导航目录" />
+            <JFXCheckBox fx:id="outputNavigator" layoutX="212.0" layoutY="241.0" selected="true" text="输出导航目录" />
             <Hyperlink fx:id="addLabel" layoutX="312.0" layoutY="198.0" text="添加标签" />
          </children>
       </AnchorPane>
