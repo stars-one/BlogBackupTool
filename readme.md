@@ -11,3 +11,5 @@
 
 ## 使用
 需要安装jdk1.8以上，下载`BlogBackupTool.zip`，解压，双击`BlogBackupTool.jar`即可打开程序
+
+[点击下载BlogBackupTool.zip](https://github.com/Stars-One/BlogBackupTool/raw/master/BlogBackupTool.zip)
