@@ -34,9 +34,9 @@ public class SceneAboutController implements Initializable {
     private Hyperlink qqlink;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        icon.setImage(MyUtils.getImg(this,"icon.png"));
-        weixin.setImage(MyUtils.getImg(this,"weixin.jpg"));
-        zhifubao.setImage(MyUtils.getImg(this,"zhifubao.jpg"));
+        icon.setImage(MyUtils.getImg("icon.png"));
+        weixin.setImage(MyUtils.getImg("weixin.jpg"));
+        zhifubao.setImage(MyUtils.getImg("zhifubao.jpg"));
         MyUtils.setLinkAction(projectlink, () -> MyUtils.setLinkAutoAction(projectlink));
         MyUtils.setLinkAction(qqlink, () -> MyUtils.setLinkAutoAction(qqlink));
         MyUtils.setLinkAction(bloglink, () -> MyUtils.setLinkAutoAction(bloglink));

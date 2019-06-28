@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<ScrollPane hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wan.controller.TagInputController">
+   <content>
+      <AnchorPane prefWidth="600.0">
+         <children>
+            <VBox layoutX="50.0" layoutY="18.0" prefWidth="500.0">
+               <children>
+                  <VBox fx:id="vboxTag" prefHeight="200.0" prefWidth="100.0" spacing="5.0" />
+                  <AnchorPane prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <JFXButton fx:id="btnAddTag" buttonType="RAISED" layoutX="147.0" layoutY="117.0" onAction="#addTag" ripplerFill="#44b255" style="-fx-background-color: #9cf7aa;" text="添加新便签" />
+                        <JFXButton fx:id="btnSave" buttonType="RAISED" layoutX="288.0" layoutY="117.0" onAction="#save" ripplerFill="#337390" style="-fx-background-color: #7fd1f7;" text="保存" />
+                        <Text fill="#22190c" layoutX="165.0" layoutY="40.0" strokeType="OUTSIDE" strokeWidth="0.0" text="关键字，以“|”进行分隔">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Text>
+                        <Text layoutX="27.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="程序会通过判断博文的标题是否包含关键字，从而达到标签名分类的效果">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </VBox>
+         </children>
+      </AnchorPane>
+   </content>
+</ScrollPane>

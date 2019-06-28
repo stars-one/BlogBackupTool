@@ -4,7 +4,8 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXProgressBar;
 
-import org.codehaus.plexus.util.FileUtils;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.FilenameUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -23,10 +24,12 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.KeyCode;
@@ -34,10 +37,13 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import wan.Utils.BaseController;
 import wan.Utils.DialogBuilder;
+import wan.Utils.Intent;
 import wan.Utils.MyUtils;
+import wan.bean.TagItemView;
 
-public class MainSceneController implements Initializable {
+public class MainSceneController extends BaseController {
 
     public JFXProgressBar progressbar;
     private String mdPath;
@@ -53,7 +59,8 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private JFXCheckBox checkBoxLabel;
-
+    @FXML
+    private Hyperlink addLabel;
     @FXML
     private JFXButton startBtn;
 
@@ -62,6 +69,8 @@ public class MainSceneController implements Initializable {
 
     @FXML
     private ImageView outPathImg;
+    private File file;//tag.txt，标签的数据
+
 
 
     /**
@@ -74,52 +83,112 @@ public class MainSceneController implements Initializable {
      */
     @FXML
     void btnStart(ActionEvent event) throws ParserConfigurationException, IOException, SAXException {
+
         startTask();
     }
 
-    private void startTask() throws ParserConfigurationException, SAXException, IOException {
+    private void startTask()  {
         progressbar.setVisible(true);
-        boolean selectedLabel = checkBoxLabel.isSelected();//标签分类是否勾选
-        if (checkFilePath()) {
+        Task<Void> myTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                if (checkFilePath()) {
 
-            mdPath = tfOutPath.getText() + File.separator + "MD";
-            htmlPath = tfOutPath.getText() + File.separator + "Html";
-            createDiretory();
+                    mdPath = tfOutPath.getText() + File.separator + "MD";
+                    htmlPath = tfOutPath.getText() + File.separator + "Html";
+                    createDiretory();//创建目录
 
-            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder = factory.newDocumentBuilder();
+                    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+                    DocumentBuilder builder = factory.newDocumentBuilder();
 
-            Document document = builder.parse(new File(tfInPath.getText()));//读取xml文件
-            NodeList itemLists = document.getElementsByTagName("item");
-            startClean(itemLists, () -> {
+                    Document document = builder.parse(new File(tfInPath.getText()));//读取xml文件
+                    NodeList itemLists = document.getElementsByTagName("item");
+                    startClean(itemLists);
+                }
+               return null;
+            }
+
+            @Override
+            protected void succeeded() {
                 progressbar.setVisible(false);
                 new DialogBuilder(tfOutPath).setTitle("提示").setMessage("已完成，输出目录为").setHyperLink(tfOutPath.getText()).setNegativeBtn("确定").create();
-            });
+            }
+        };
+        new Thread(myTask).start();
 
-
-        }
     }
 
     /**
      * 开始整理分类
      *
      * @param itemLists
-     * @param listener
      */
-    private void startClean(NodeList itemLists, onFinishListener listener) {
-        for (int i = 0; i < itemLists.getLength(); i++) {
-            NodeList list = itemLists.item(i).getChildNodes();
-            String title = list.item(0).getTextContent();//第一个结点内容是标题
-            String link = list.item(1).getTextContent();//第二个结点内容是链接
-            String description = list.item(6).getTextContent();
-            try {
-                fileWrite(title, link, description);
-            } catch (IOException e) {
-                e.printStackTrace();
+    private void startClean(NodeList itemLists) {
+        try {
+            //获得每一篇博文的单独文件
+            for (int i = 0; i < itemLists.getLength(); i++) {
+                NodeList list = itemLists.item(i).getChildNodes();
+                String title = list.item(0).getTextContent();//第一个结点内容是标题
+                String link = list.item(1).getTextContent();//第二个结点内容是链接
+                String description = list.item(6).getTextContent();
+
+                fileWrite(title, link, description);//抽取内容，写入单独文件
+            }
+            //标签分类
+            boolean selectedLabel = checkBoxLabel.isSelected();//标签分类是否勾选
+            if (selectedLabel) {
+                fileItemizeForMd(mdPath);//按标签分类（MD文件夹）
+                fileItemizeForMd(htmlPath);//按标签分类(Html文件夹）
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 标签分类(Md文件夹）
+     *
+     * @throws IOException
+     */
+    private void fileItemizeForMd(String path) throws IOException {
+        File file = new File(MyUtils.getCurrentPath(), "tag.txt");
+        if (file.exists()) {
+            List<String> list = FileUtils.readLines(file, "UTF-8");
+            //每个标签以及标签的关键字数据s
+            for (String s : list) {
+                TagItemView tagItemView = new TagItemView(s);
+                String tagName = tagItemView.getTagNameText();
+                List<String> keys = tagItemView.getMapData().get(tagName);
+
+                //包含关键字的文件
+                File[] files = new File(path).listFiles((dir, name) -> {
+                    boolean flag = false;
+                    for (String key : keys) {
+                        if (name.contains(key)) {
+                            flag = true;
+                            break;
+                        }
+                    }
+                    return flag;
+                });
+
+                //创建标签名的文件夹
+                File diretory = new File(path + File.separator + tagName);
+                diretory.mkdirs();
+                //剪切，把文件放入标签内
+                for (File file1 : files) {
+                    if (!file1.isDirectory()) {
+                        FileUtils.copyFileToDirectory(file1, diretory);
+                        file1.delete();
+                    }
+
+                }
+
             }
         }
-        listener.onFinish();
     }
+
 
     /**
      * 创建目录
@@ -183,7 +252,7 @@ public class MainSceneController implements Initializable {
     @FXML
     void choseFile(MouseEvent event) {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("选择输出目录");
+        fileChooser.setTitle("选择xml文件");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("xml文件", "*.xml"));
         File choseFile = fileChooser.showOpenDialog(inPathImg.getScene().getWindow());
         if (choseFile != null) {
@@ -200,7 +269,7 @@ public class MainSceneController implements Initializable {
     void getFile(DragEvent event) {
         List<File> files = event.getDragboard().getFiles();
         File file = files.get(0);
-        if (FileUtils.getExtension(file.getName()).contains("xml")) {
+        if (FilenameUtils.getExtension(file.getName()).contains("xml")) {
             String path = file.getPath();
             tfInPath.setText(path);
         }
@@ -208,10 +277,20 @@ public class MainSceneController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        file = new File(MyUtils.getCurrentPath(), "tag.txt");
+        if (file.exists()) {
+            checkBoxLabel.setSelected(true);
+        }
 
-        //设置图片
-        inPathImg.setImage(MyUtils.getImg(this, "file.png"));
-        outPathImg.setImage(MyUtils.getImg(this, "file.png"));
+        Image img = MyUtils.getImg("file.png");
+        inPathImg.setImage(img);
+        outPathImg.setImage(img);
+        MyUtils.setLinkAction(addLabel, new MyUtils.LinkActionHander() {
+            @Override
+            public void setAction() {
+                new Intent("scene_tag_input", "输入标签", "icon.png", 600, 700).start();
+            }
+        });
 
     }
 
@@ -235,7 +314,6 @@ public class MainSceneController implements Initializable {
 
         File file;
         OutputStreamWriter outputStreamWriter;
-
         if (isMD(msg)) {
             //md文件
 
@@ -266,12 +344,12 @@ public class MainSceneController implements Initializable {
     }
 
 
-    public void openAboutStage(ActionEvent actionEvent) throws IOException {
-        MyUtils.createAndShowStage(this, null, "关于", "scene_about", "icon.png", 600, 600);
+    public void openAboutStage(ActionEvent actionEvent) {
+        new Intent("scene_about", "关于", "icon.png", 600, 600).start();
     }
 
-    public void openVersionStage(ActionEvent actionEvent) throws IOException {
-        MyUtils.createAndShowStage(this, null, "版本更新说明", "scene_version", "icon.png", 600, 600);
+    public void openVersionStage(ActionEvent actionEvent) {
+        new Intent("scene_version", "版本更新说明", "icon.png", 600, 600).start();
 
     }
 

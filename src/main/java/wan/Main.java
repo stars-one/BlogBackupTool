@@ -1,6 +1,5 @@
 package wan;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import javafx.application.Application;
@@ -13,7 +12,9 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        MyUtils.createAndShowStage(this,primaryStage,"博客园博文备份工具","scene_main","icon.png",600,400);
+        MyUtils.showMainStage(this,primaryStage,"博客园博文备份工具","scene_main","icon.png",600,400);
+        //MyUtils.showMainStage(this,primaryStage,"博客园博文备份工具","test","icon.png",600,400);
+        //MyUtils.showMainStage(this,primaryStage,"博客园博文备份工具","scene_tag_input","icon.png",600,700);
         //FXMLLoader loader = new FXMLLoader();    // 创建对象
         //loader.setBuilderFactory(new JavaFXBuilderFactory());    // 设置BuilderFactory
         //loader.setLocation(MyUtils.getFxmlPath(this, "scene_main"));
@@ -30,7 +31,7 @@ public class Main extends Application {
     }
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args)  {
         launch(args);
     }
 }
