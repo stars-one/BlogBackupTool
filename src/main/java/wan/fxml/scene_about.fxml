@@ -12,7 +12,7 @@
 <AnchorPane prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="wan.controller.SceneAboutController">
    <children>
       <ImageView fx:id="icon" fitHeight="50.0" fitWidth="50.0" layoutX="275.0" pickOnBounds="true" preserveRatio="true" />
-      <Text layoutX="218.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" text="博客园备份工具v1.0">
+      <Text layoutX="218.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" text="博客园备份工具v4.0">
          <font>
             <Font name="System Bold" size="18.0" />
          </font>

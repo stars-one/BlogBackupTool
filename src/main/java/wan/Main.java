@@ -1,14 +1,11 @@
 package wan;
 
-import java.io.InputStream;
-
 import javafx.application.Application;
 import javafx.stage.Stage;
 import wan.Utils.MyUtils;
 
 public class Main extends Application {
 
-    private InputStream in;
 
     @Override
     public void start(Stage primaryStage) throws Exception {

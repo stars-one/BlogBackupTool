@@ -18,6 +18,18 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Text>
-      <Label layoutX="26.0" layoutY="153.0" prefHeight="94.0" prefWidth="549.0" text="实现标签分类和生成目录导航的功能，感谢网友空和一位不知网名的网友的打赏！" wrapText="true" />
+      <Label layoutX="26.0" layoutY="153.0" prefHeight="51.0" prefWidth="549.0" text="实现标签分类和生成目录导航的功能，感谢网友空和一位不知网名的网友的打赏！" wrapText="true" />
+      <Text layoutX="14.0" layoutY="222.0" strokeType="OUTSIDE" strokeWidth="0.0" text="v3.0">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Text>
+      <Label layoutX="26.0" layoutY="227.0" prefHeight="51.0" prefWidth="549.0" text="修复标签名不能带空格的小bug" wrapText="true" />
+      <Text layoutX="14.0" layoutY="296.0" strokeType="OUTSIDE" strokeWidth="0.0" text="v4.0">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font>
+      </Text>
+      <Label layoutX="26.0" layoutY="301.0" prefHeight="51.0" prefWidth="549.0" text="新增：处理新的备份数据，可以在之前的目录导航进行追加新内容" wrapText="true" />
    </children>
 </AnchorPane>

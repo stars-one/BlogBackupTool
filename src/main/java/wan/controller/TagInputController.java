@@ -71,7 +71,6 @@ public class TagInputController extends BaseController {
     void addTag(ActionEvent event) {
         ObservableList<Node> children = vboxTag.getChildren();
         children.add(new TagItemView());
-
     }
 
     @FXML
@@ -87,7 +86,7 @@ public class TagInputController extends BaseController {
 
 
             if (!keyText.equals("") && !tagNameText.equals("")) {
-                String text = keyText + " " + tagNameText + "\n";
+                String text = keyText + "  " + tagNameText + "\n";
                 stringBuilder.append(text);
             }
         }

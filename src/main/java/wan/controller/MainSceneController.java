@@ -144,27 +144,71 @@ public class MainSceneController extends BaseController {
             }
             //输出目录导航文件
             if (outputNavigator.isSelected()) {
-                List<String> list = FileUtils.readLines(new File(MyUtils.getCurrentPath(), "tag.txt"), "UTF-8");
-                for (String s : list) {
-                    TagItemView tagItemView = new TagItemView(s);
-                    String tagName = tagItemView.getTagNameText();
-                    List<String> keys = tagItemView.getMapData().get(tagName);
-                    Iterator<Link> iterator = links.iterator();
-                    File outputFile = new File(tfOutPath.getText(), "目录导航.md");
-                    //删除原来的文件
+                File tagFile = new File(MyUtils.getCurrentPath(), "tag.txt");
+                File outputFile = new File(tfOutPath.getText(), "目录导航.md");
 
-                    FileUtils.writeStringToFile(outputFile, "## " + tagName + "\n", "UTF-8", true);//写入二级标题
-                    while (iterator.hasNext()) {
-                        Link next = iterator.next();
-                        for (String key : keys) {
-                            if (next.getTitle().contains(key)) {
-                                FileUtils.writeStringToFile(outputFile, next.getLink(), "UTF-8", true);
-                                iterator.remove();
-                                break;
+                if (!outputFile.exists()) {
+                    //tag.txt不存在，创建tag.txt
+                    List<String> list = FileUtils.readLines(tagFile, "UTF-8");
+                    for (String s : list) {
+                        TagItemView tagItemView = new TagItemView(s);
+                        String tagName = tagItemView.getTagNameText();
+                        List<String> keys = tagItemView.getMapData().get(tagName);
+                        Iterator<Link> iterator = links.iterator();
+
+                        FileUtils.writeStringToFile(outputFile, "## " + tagName + "\n", "UTF-8", true);//写入二级标题
+                        while (iterator.hasNext()) {
+                            Link next = iterator.next();
+                            for (String key : keys) {
+                                if (next.getTitle().contains(key)) {
+                                    FileUtils.writeStringToFile(outputFile, next.getLink(), "UTF-8", true);
+                                    iterator.remove();
+                                    break;
+                                }
                             }
                         }
                     }
+                } else {
+                    String str = FileUtils.readFileToString(outputFile, "UTF-8");
+                    StringBuffer allBuffer = new StringBuffer();//总的缓存区
+                    List<String> list = FileUtils.readLines(tagFile, "UTF-8");
+                    for (String s : list) {
+                        TagItemView tagItemView = new TagItemView(s);
+                        String tagName = tagItemView.getTagNameText();
+                        List<String> keys = tagItemView.getMapData().get(tagName);
+                        Iterator<Link> iterator = links.iterator();
+
+                        //字符串缓存区
+                        StringBuffer buffer = new StringBuffer();
+                        //二级标题
+                        String h2Title = "## " + tagName + "\n";
+                        //写入二级标题
+                        buffer.append(h2Title);
+
+                        while (iterator.hasNext()) {
+                            Link next = iterator.next();
+                            for (String key : keys) {
+                                //博文标题是否包含有关键字
+                                if (next.getTitle().contains(key)) {
+                                    buffer.append(next.getLink()).append("\n");
+                                    iterator.remove();
+                                    break;
+                                }
+                            }
+                        }
+                        //追加内容
+                        if (str.contains(h2Title)) {
+                            //出现同2级标题的，在2级标题中后面追加内容
+                            str = str.replace(h2Title, buffer.toString());
+                        } else {
+                            //出现新的2级标题，单独追加
+                            allBuffer.append(buffer.toString());
+                        }
+                    }
+
+                    FileUtils.writeStringToFile(outputFile, str+allBuffer.toString(), "UTF-8", false);
                 }
+
             }
 
         } catch (IOException e) {

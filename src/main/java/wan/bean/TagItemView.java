@@ -24,7 +24,7 @@ public class TagItemView extends HBox {
     private TextField tagNameTextField = new TextField();
 
     public TagItemView(String text) {
-        String[] str = text.split(" ");
+        String[] str = text.split("  ");
         ObservableList<Node> children = this.getChildren();
         keyTextField.setPromptText("输入关键字");
         keyTextField.setText(str[0]);

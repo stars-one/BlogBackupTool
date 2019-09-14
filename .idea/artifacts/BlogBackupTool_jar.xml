@@ -8,8 +8,10 @@
         </element>
         <element id="module-output" name="BlogBackupTool" />
       </element>
-      <element id="library" level="project" name="Maven: com.jfoenix:jfoenix:8.0.8" />
-      <element id="library" level="project" name="commons-io-2.2" />
+      <element id="directory" name="lib">
+        <element id="library" level="project" name="Maven: com.jfoenix:jfoenix:8.0.8" />
+        <element id="library" level="project" name="commons-io-2.2" />
+      </element>
     </root>
   </artifact>
 </component>
